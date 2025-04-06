@@ -4,13 +4,13 @@
   --------------------------------------------------------------------------------------
 */
 const getList = async () => {
-  let url = 'http://127.0.0.1:5000/produtos';
+  let url = 'http://127.0.0.1:5000/passageiros';
   fetch(url, {
     method: 'get',
   })
     .then((response) => response.json())
     .then((data) => {
-      data.produtos.forEach(item => insertList(item.nome, item.quantidade, item.valor))
+      data.passageiros.forEach(item => insertList(item.nome, item.cpf, item.peso))
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -30,13 +30,13 @@ getList()
   Função para colocar um item na lista do servidor via requisição POST
   --------------------------------------------------------------------------------------
 */
-const postItem = async (inputProduct, inputQuantity, inputPrice) => {
+const postItem = async (inputPassageiro, inputCPF, inputPeso) => {
   const formData = new FormData();
-  formData.append('nome', inputProduct);
-  formData.append('quantidade', inputQuantity);
-  formData.append('valor', inputPrice);
+  formData.append('nome', inputPassageiro);
+  formData.append('quantidade', inputCPF);
+  formData.append('valor', inputPeso);
 
-  let url = 'http://127.0.0.1:5000/produto';
+  let url = 'http://127.0.0.1:5000/passageiro';
   fetch(url, {
     method: 'post',
     body: formData
@@ -91,7 +91,7 @@ const removeElement = () => {
 */
 const deleteItem = (item) => {
   console.log(item)
-  let url = 'http://127.0.0.1:5000/produto?nome=' + item;
+  let url = 'http://127.0.0.1:5000/passageiro?cpf=' + item;
   fetch(url, {
     method: 'delete'
   })
@@ -103,21 +103,24 @@ const deleteItem = (item) => {
 
 /*
   --------------------------------------------------------------------------------------
-  Função para adicionar um novo item com nome, quantidade e valor 
+  Função para adicionar um novo passageiro com nome, cpf e peso 
   --------------------------------------------------------------------------------------
 */
 const newItem = () => {
-  let inputProduct = document.getElementById("newInput").value;
-  let inputQuantity = document.getElementById("newQuantity").value;
-  let inputPrice = document.getElementById("newPrice").value;
+  let inputPassageiro = document.getElementById("newPassageiro").value;
+  let inputCPF = document.getElementById("newCPF").value;
+  let inputPeso = document.getElementById("newPeso").value;
 
-  if (inputProduct === '') {
-    alert("Escreva o nome de um item!");
-  } else if (isNaN(inputQuantity) || isNaN(inputPrice)) {
-    alert("Quantidade e valor precisam ser números!");
+  if (inputPassageiro === '') {
+    alert("Escreva o nome de um passageiro!")
+  } else if (inputCPF === '') {
+    alert("Entre com o CPF");
+  } else if (isNaN(inputPeso)) {
+    alert("Peso precisa ser número!");
   } else {
-    insertList(inputProduct, inputQuantity, inputPrice)
-    postItem(inputProduct, inputQuantity, inputPrice)
+    postItem(inputPassageiro, inputCPF, inputPeso)
+    /*tratar erro post*/
+    insertList(inputPassageiro, inputCPF, inputPeso)
     alert("Item adicionado!")
   }
 }
@@ -127,8 +130,8 @@ const newItem = () => {
   Função para inserir items na lista apresentada
   --------------------------------------------------------------------------------------
 */
-const insertList = (nameProduct, quantity, price) => {
-  var item = [nameProduct, quantity, price]
+const insertList = (namePassageiro, cpf, peso) => {
+  var item = [namePassageiro, cpf, peso]
   var table = document.getElementById('myTable');
   var row = table.insertRow();
 
@@ -138,8 +141,8 @@ const insertList = (nameProduct, quantity, price) => {
   }
   insertButton(row.insertCell(-1))
   document.getElementById("newInput").value = "";
-  document.getElementById("newQuantity").value = "";
-  document.getElementById("newPrice").value = "";
+  document.getElementById("newCPF").value = "";
+  document.getElementById("newPeso").value = "";
 
   removeElement()
 }
