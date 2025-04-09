@@ -45,9 +45,11 @@ const postItem = async (inputPassageiro, inputCPF, inputFlight) => {
     .then((data) => {
       console.log(data.id);
       insertList(data.id,inputPassageiro, inputCPF, inputFlight);
+      alert("Passageiro adicionado!");
     })
     .catch((error) => {
       console.error('Error:', error);
+      alert("Erro ao adicionar o passageiro!");
     });
 }
 
@@ -65,12 +67,73 @@ const insertButton = (parent) => {
   parent.appendChild(span);
 }
 
+/*
+  --------------------------------------------------------------------------------------
+  Função para criar um botão edit para cada item da lista
+  --------------------------------------------------------------------------------------
+*/
 const insertButton2 = (parent) => {
   var span = document.createElement("span");
   var txt = document.createTextNode("\u00BA");
   span.className = "edit";
   span.appendChild(txt);
   parent.appendChild(span);
+}
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para editar um item na lista do servidor via requisição PUT
+  --------------------------------------------------------------------------------------
+*/
+const putItem = async (id, inputPassageiro, inputCPF, inputFlight) => {
+  const formData = new FormData();
+  formData.append('id', id);
+  formData.append('nome', inputPassageiro);
+  formData.append('cpf', inputCPF);
+  formData.append('flight', inputFlight);
+
+  const url = 'http://127.0.0.1:5000/passageiro';
+  fetch(url, {
+    method: 'put',
+    body: formData
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.id);
+      updateList(data.id,inputPassageiro, inputCPF, inputFlight);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert("Erro ao editar passageiro!");
+    });
+}
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para atualizar um item da lista apos a edicao
+  --------------------------------------------------------------------------------------
+*/
+const updateList = (id, namePassageiro, cpf, flight) => {
+
+  var table = document.getElementById('myTable');
+  var line = 0;
+
+  while(row=table.rows[line++]){
+    const rowId = row.id;
+    console.log('Row ID:', rowId);
+    if (rowId==id){
+      row.cells[0].innerHTML=namePassageiro;
+      row.cells[1].innerHTML=cpf;
+      row.cells[2].innerHTML=flight;
+    }
+    
+  }
+
+  document.getElementById("ProcessBtn").innerHTML= "Adicionar"
+  document.getElementById("newPassageiro").value = "";
+  document.getElementById("newCPF").value = "";
+  document.getElementById("newFlight").value = "";
+  alert("Passageiro editado!");
 }
 
 /*
@@ -84,13 +147,22 @@ const updateElement = () => {
   var i;
   for (i = 0; i < edit.length; i++) {
     edit[i].onclick = function () {
-      /*let div = this.parentElement.parentElement;
-      const cpf = div.getElementsByTagName('td')[1].innerHTML*/
+      let div = this.parentElement.parentElement;
       const rowId = this.parentElement.parentElement.id;
       console.log('Row ID:', rowId);
+      const nome = div.getElementsByTagName('td')[0].innerHTML
+      const cpf = div.getElementsByTagName('td')[1].innerHTML
+      const flight = div.getElementsByTagName('td')[2].innerHTML
+      document.getElementById("id").value = rowId;
+      document.getElementById("newPassageiro").value = nome;
+      document.getElementById("newCPF").value = cpf;
+      document.getElementById("newFlight").value = flight;
+      document.getElementById("ProcessBtn").innerHTML= "Editar";
     }
   }
 }
+
+
 
 /*
   --------------------------------------------------------------------------------------
@@ -106,9 +178,9 @@ const removeElement = () => {
       var div = this.parentElement.parentElement;
       const cpf = div.getElementsByTagName('td')[1].innerHTML
       if (confirm("Você tem certeza?")) {
-        div.remove()
-        deleteItem(cpf)
-        alert("Removido!")
+        div.remove();
+        deleteItem(cpf);
+        alert("Removido!");
       }
     }
   }
@@ -137,21 +209,36 @@ const deleteItem = (item) => {
   Função para adicionar um novo passageiro com nome, cpf e peso 
   --------------------------------------------------------------------------------------
 */
-const newItem = () => {
+const ProcessItem = () => {
+  var id = document.getElementById("id").value;
   var inputPassageiro = document.getElementById("newPassageiro").value;
   var inputCPF = document.getElementById("newCPF").value;
   var inputFlight = document.getElementById("newFlight").value;
 
-  if (inputPassageiro === '') {
-    alert("Escreva o nome de um passageiro!")
-  } else if (inputCPF === '') {
-    alert("Entre com o CPF");
-  } else if (inputFlight === '') {
-    alert("Entre com o Voo!");
-  } else {
-    postItem(inputPassageiro, inputCPF, inputFlight)
-    alert("Item adicionado!")
+  if (document.getElementById("ProcessBtn").innerHTML=== "Editar")
+  {
+    if (inputPassageiro === '') {
+      alert("Escreva o nome de um passageiro!")
+    } else if (inputCPF === '') {
+      alert("Entre com o CPF");
+    } else if (inputFlight === '') {
+      alert("Entre com o Voo!");
+    } else {
+      putItem(id,inputPassageiro, inputCPF, inputFlight);
+    }
   }
+  else{
+    if (inputPassageiro === '') {
+      alert("Escreva o nome de um passageiro!")
+    } else if (inputCPF === '') {
+      alert("Entre com o CPF");
+    } else if (inputFlight === '') {
+      alert("Entre com o Voo!");
+    } else {
+      postItem(inputPassageiro, inputCPF, inputFlight);
+    }
+  }
+
 }
 
 /*
