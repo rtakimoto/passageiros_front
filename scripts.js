@@ -10,7 +10,7 @@ const getList = async () => {
   })
     .then((response) => response.json())
     .then((data) => {
-      data.passageiros.forEach(item => insertList(item.nome, item.cpf, item.peso))
+      data.passageiros.forEach(item => insertList(item.id,item.nome, item.cpf, item.flight))
     })
     .catch((error) => {
       console.error('Error:', error);
@@ -30,11 +30,11 @@ getList()
   Função para colocar um item na lista do servidor via requisição POST
   --------------------------------------------------------------------------------------
 */
-const postItem = async (inputPassageiro, inputCPF, inputPeso) => {
+const postItem = async (inputPassageiro, inputCPF, inputFlight) => {
   const formData = new FormData();
   formData.append('nome', inputPassageiro);
-  formData.append('quantidade', inputCPF);
-  formData.append('valor', inputPeso);
+  formData.append('cpf', inputCPF);
+  formData.append('flight', inputFlight);
 
   let url = 'http://127.0.0.1:5000/passageiro';
   fetch(url, {
@@ -61,6 +61,32 @@ const insertButton = (parent) => {
   parent.appendChild(span);
 }
 
+const insertButton2 = (parent) => {
+  let span = document.createElement("span");
+  let txt = document.createTextNode("\u00BA");
+  span.className = "edit";
+  span.appendChild(txt);
+  parent.appendChild(span);
+}
+
+/*
+  --------------------------------------------------------------------------------------
+  Função para editar um item da lista de acordo com o click no botão edit
+  --------------------------------------------------------------------------------------
+*/
+const updateElement = () => {
+  let edit = document.getElementsByClassName("edit");
+  // var table = document.getElementById('myTable');
+  let i;
+  for (i = 0; i < edit.length; i++) {
+    edit[i].onclick = function () {
+      /*let div = this.parentElement.parentElement;
+      const cpf = div.getElementsByTagName('td')[1].innerHTML*/
+      const rowId = this.parentElement.parentElement.id;
+      console.log('Row ID:', rowId);
+    }
+  }
+}
 
 /*
   --------------------------------------------------------------------------------------
@@ -74,10 +100,12 @@ const removeElement = () => {
   for (i = 0; i < close.length; i++) {
     close[i].onclick = function () {
       let div = this.parentElement.parentElement;
-      const nomeItem = div.getElementsByTagName('td')[0].innerHTML
+      const cpf = div.getElementsByTagName('td')[1].innerHTML
+      const rowId = this.parentElement.parentElement.id;
+      console.log('Row ID:', rowId);
       if (confirm("Você tem certeza?")) {
         div.remove()
-        deleteItem(nomeItem)
+        deleteItem(cpf)
         alert("Removido!")
       }
     }
@@ -91,6 +119,7 @@ const removeElement = () => {
 */
 const deleteItem = (item) => {
   console.log(item)
+  
   let url = 'http://127.0.0.1:5000/passageiro?cpf=' + item;
   fetch(url, {
     method: 'delete'
@@ -109,18 +138,18 @@ const deleteItem = (item) => {
 const newItem = () => {
   let inputPassageiro = document.getElementById("newPassageiro").value;
   let inputCPF = document.getElementById("newCPF").value;
-  let inputPeso = document.getElementById("newPeso").value;
+  let inputFlight = document.getElementById("newPeso").value;
 
   if (inputPassageiro === '') {
     alert("Escreva o nome de um passageiro!")
   } else if (inputCPF === '') {
     alert("Entre com o CPF");
-  } else if (isNaN(inputPeso)) {
-    alert("Peso precisa ser número!");
+  } else if (inputFlight === '') {
+    alert("Entre com o Voo!");
   } else {
-    postItem(inputPassageiro, inputCPF, inputPeso)
+    postItem(inputPassageiro, inputCPF, inputFlight)
     /*tratar erro post*/
-    insertList(inputPassageiro, inputCPF, inputPeso)
+    insertList(inputPassageiro, inputCPF, inputFlight)
     alert("Item adicionado!")
   }
 }
@@ -130,19 +159,27 @@ const newItem = () => {
   Função para inserir items na lista apresentada
   --------------------------------------------------------------------------------------
 */
-const insertList = (namePassageiro, cpf, peso) => {
-  var item = [namePassageiro, cpf, peso]
+const insertList = (id, namePassageiro, cpf, flight) => {
+  var item = [id,namePassageiro, cpf, flight]
   var table = document.getElementById('myTable');
   var row = table.insertRow();
 
   for (var i = 0; i < item.length; i++) {
-    var cel = row.insertCell(i);
-    cel.textContent = item[i];
+    if (i===0){
+      row.id=item[0];
+      console.log(item[0]);
+    }
+    else{
+      var cel = row.insertCell(i-1);
+      cel.textContent = item[i];
+    }
   }
   insertButton(row.insertCell(-1))
-  document.getElementById("newInput").value = "";
+  insertButton2(row.insertCell(-1))
+  document.getElementById("newPassageiro").value = "";
   document.getElementById("newCPF").value = "";
-  document.getElementById("newPeso").value = "";
+  document.getElementById("newFlight").value = "";
 
   removeElement()
+  updateElement()
 }

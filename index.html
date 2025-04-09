@@ -23,10 +23,11 @@
     </header>
 
      <!-- Opções para adicionar um novo item -->
-    <section class="newItem">
-        <input type="text" id="newInput" placeholder="Adicionar novo passageiro:">
-        <input type="text" id="newQuantity" placeholder="CPF:">
-        <input type="text" id="newPrice" placeholder="Peso:">
+    <section class="newItem"">
+        <input type="text" id="id" value="id" readonly  class="hidden-input">
+        <input type="text" id="newPassageiro" placeholder="Adicionar novo passageiro:">
+        <input type="text" id="newCPF" placeholder="CPF:">
+        <input type="text" id="newFlight" placeholder="Flight:">
         <button onclick="newItem()" class="addBtn">Adicionar</button>
     </section>
 
@@ -36,8 +37,9 @@
             <tr>
                 <th>Nome</th>
                 <th>CPF</th>
-                <th>Peso</th>
+                <th>Flight</th>
                 <th><img src="https://cdn-icons-png.flaticon.com/512/126/126468.png" width="15px" height="15px"></th>
+                <th><img src="img/editar.png" width="15px" height="15px"></th>
             </tr>
         </table>
     </section>
