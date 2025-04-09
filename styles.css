@@ -49,10 +49,10 @@ header {
     clear: both;
 }
 
-#newInput {
+#newPassageiro {
     margin: 0;
     border: 1px solid rgb(35, 32, 24);
-    width: 40%;
+    width: 30%;
     padding: 10px;
     font-size: 16px;
 }

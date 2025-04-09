@@ -36,12 +36,16 @@ const postItem = async (inputPassageiro, inputCPF, inputFlight) => {
   formData.append('cpf', inputCPF);
   formData.append('flight', inputFlight);
 
-  let url = 'http://127.0.0.1:5000/passageiro';
+  var url = 'http://127.0.0.1:5000/passageiro';
   fetch(url, {
     method: 'post',
     body: formData
   })
     .then((response) => response.json())
+    .then((data) => {
+      console.log(data.id);
+      insertList(data.id,inputPassageiro, inputCPF, inputFlight);
+    })
     .catch((error) => {
       console.error('Error:', error);
     });
@@ -138,7 +142,7 @@ const deleteItem = (item) => {
 const newItem = () => {
   let inputPassageiro = document.getElementById("newPassageiro").value;
   let inputCPF = document.getElementById("newCPF").value;
-  let inputFlight = document.getElementById("newPeso").value;
+  let inputFlight = document.getElementById("newFlight").value;
 
   if (inputPassageiro === '') {
     alert("Escreva o nome de um passageiro!")
@@ -148,8 +152,9 @@ const newItem = () => {
     alert("Entre com o Voo!");
   } else {
     postItem(inputPassageiro, inputCPF, inputFlight)
-    /*tratar erro post*/
-    insertList(inputPassageiro, inputCPF, inputFlight)
+    /*TODO: tratar erro post, ver retorno para id
+    id= recebe o retorno do post item*/
+    //insertList(inputPassageiro, inputCPF, inputFlight)
     alert("Item adicionado!")
   }
 }
