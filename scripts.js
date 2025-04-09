@@ -4,7 +4,7 @@
   --------------------------------------------------------------------------------------
 */
 const getList = async () => {
-  let url = 'http://127.0.0.1:5000/passageiros';
+  const url = 'http://127.0.0.1:5000/passageiros';
   fetch(url, {
     method: 'get',
   })
@@ -36,7 +36,7 @@ const postItem = async (inputPassageiro, inputCPF, inputFlight) => {
   formData.append('cpf', inputCPF);
   formData.append('flight', inputFlight);
 
-  var url = 'http://127.0.0.1:5000/passageiro';
+  const url = 'http://127.0.0.1:5000/passageiro';
   fetch(url, {
     method: 'post',
     body: formData
@@ -58,16 +58,16 @@ const postItem = async (inputPassageiro, inputCPF, inputFlight) => {
   --------------------------------------------------------------------------------------
 */
 const insertButton = (parent) => {
-  let span = document.createElement("span");
-  let txt = document.createTextNode("\u00D7");
+  var span = document.createElement("span");
+  var txt = document.createTextNode("\u00D7");
   span.className = "close";
   span.appendChild(txt);
   parent.appendChild(span);
 }
 
 const insertButton2 = (parent) => {
-  let span = document.createElement("span");
-  let txt = document.createTextNode("\u00BA");
+  var span = document.createElement("span");
+  var txt = document.createTextNode("\u00BA");
   span.className = "edit";
   span.appendChild(txt);
   parent.appendChild(span);
@@ -79,9 +79,9 @@ const insertButton2 = (parent) => {
   --------------------------------------------------------------------------------------
 */
 const updateElement = () => {
-  let edit = document.getElementsByClassName("edit");
+  var edit = document.getElementsByClassName("edit");
   // var table = document.getElementById('myTable');
-  let i;
+  var i;
   for (i = 0; i < edit.length; i++) {
     edit[i].onclick = function () {
       /*let div = this.parentElement.parentElement;
@@ -98,15 +98,13 @@ const updateElement = () => {
   --------------------------------------------------------------------------------------
 */
 const removeElement = () => {
-  let close = document.getElementsByClassName("close");
+  var close = document.getElementsByClassName("close");
   // var table = document.getElementById('myTable');
-  let i;
+  var i;
   for (i = 0; i < close.length; i++) {
     close[i].onclick = function () {
-      let div = this.parentElement.parentElement;
+      var div = this.parentElement.parentElement;
       const cpf = div.getElementsByTagName('td')[1].innerHTML
-      const rowId = this.parentElement.parentElement.id;
-      console.log('Row ID:', rowId);
       if (confirm("Você tem certeza?")) {
         div.remove()
         deleteItem(cpf)
@@ -124,7 +122,7 @@ const removeElement = () => {
 const deleteItem = (item) => {
   console.log(item)
   
-  let url = 'http://127.0.0.1:5000/passageiro?cpf=' + item;
+  const url = 'http://127.0.0.1:5000/passageiro?cpf=' + item;
   fetch(url, {
     method: 'delete'
   })
@@ -140,9 +138,9 @@ const deleteItem = (item) => {
   --------------------------------------------------------------------------------------
 */
 const newItem = () => {
-  let inputPassageiro = document.getElementById("newPassageiro").value;
-  let inputCPF = document.getElementById("newCPF").value;
-  let inputFlight = document.getElementById("newFlight").value;
+  var inputPassageiro = document.getElementById("newPassageiro").value;
+  var inputCPF = document.getElementById("newCPF").value;
+  var inputFlight = document.getElementById("newFlight").value;
 
   if (inputPassageiro === '') {
     alert("Escreva o nome de um passageiro!")
@@ -152,9 +150,6 @@ const newItem = () => {
     alert("Entre com o Voo!");
   } else {
     postItem(inputPassageiro, inputCPF, inputFlight)
-    /*TODO: tratar erro post, ver retorno para id
-    id= recebe o retorno do post item*/
-    //insertList(inputPassageiro, inputCPF, inputFlight)
     alert("Item adicionado!")
   }
 }
