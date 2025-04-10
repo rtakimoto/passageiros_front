@@ -31,15 +31,20 @@ getList()
   --------------------------------------------------------------------------------------
 */
 const postItem = async (inputPassageiro, inputCPF, inputFlight) => {
-  const formData = new FormData();
-  formData.append('nome', inputPassageiro);
-  formData.append('cpf', inputCPF);
-  formData.append('flight', inputFlight);
+  
+  var data={
+    nome: inputPassageiro,
+    cpf: inputCPF,
+    flight: inputFlight
+  };
 
   const url = 'http://127.0.0.1:5000/passageiro';
   fetch(url, {
     method: 'post',
-    body: formData
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
   })
     .then((response) => response.json())
     .then((data) => {
@@ -86,16 +91,21 @@ const insertButton2 = (parent) => {
   --------------------------------------------------------------------------------------
 */
 const putItem = async (id, inputPassageiro, inputCPF, inputFlight) => {
-  const formData = new FormData();
-  formData.append('id', id);
-  formData.append('nome', inputPassageiro);
-  formData.append('cpf', inputCPF);
-  formData.append('flight', inputFlight);
+
+  var data={
+    id: id,
+    nome: inputPassageiro,
+    cpf: inputCPF,
+    flight: inputFlight
+  };
 
   const url = 'http://127.0.0.1:5000/passageiro';
   fetch(url, {
     method: 'put',
-    body: formData
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
   })
     .then((response) => response.json())
     .then((data) => {
